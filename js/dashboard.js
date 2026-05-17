@@ -771,3 +771,39 @@ const ENGLISH_QUOTES = [
     document.getElementById('quote-author').textContent = '— ' + quote.author;
   }
 })();
+
+// ==========================================
+// Data Backup — Export / Import
+// ==========================================
+
+function downloadBackup() {
+  const json = exportData();
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const d = new Date();
+  const dateStr = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  a.download = 'english-word-backup-' + dateStr + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  if (typeof showToast === 'function') showToast('✅ 数据已导出！保存好这个文件');
+}
+
+function uploadBackup(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const result = importData(e.target.result);
+    if (result.success) {
+      if (typeof showToast === 'function') showToast('✅ ' + result.message);
+      setTimeout(function() { location.reload(); }, 800);
+    } else {
+      alert('❌ ' + result.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
