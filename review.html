@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🃏 卡片复习 — 易混词小窝</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo">🌟 易混词小窝</div>
+  <div class="nav-links">
+    <a href="index.html">🏠 主页</a>
+    <a href="review.html" class="active">🃏 复习</a>
+    <a href="manage.html">📝 词库</a>
+    <a href="search.html">🔍 搜索</a>
+  </div>
+</nav>
+
+<div class="page-container" id="app">
+  <!-- Pre-review state -->
+  <div id="pre-review" style="text-align:center; margin: 40px 0;">
+    <h1>🃏 卡片复习</h1>
+    <div class="stat-card" style="max-width:300px; margin:20px auto;">
+      <div class="stat-value" id="due-total">0</div>
+      <div class="stat-label">📋 今日待复习</div>
+    </div>
+    <div id="pre-review-message" style="margin:16px 0; color:var(--color-text-light);"></div>
+    <button class="btn btn-primary btn-lg" id="btn-start" onclick="startReview()">🃏 开始复习</button>
+    <p style="margin-top:16px; font-size:0.85rem; color:var(--color-text-light);">
+      💡 点击卡片翻转查看释义，然后给自己打分（0-5）<br>
+      复习进度会即时保存，可以随时退出~
+    </p>
+  </div>
+
+  <!-- Review state -->
+  <div id="review-state" style="display:none;">
+    <!-- Progress -->
+    <div style="margin-bottom:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-family:var(--font-title);">📋 进度：<span id="progress-text">0/0</span></span>
+        <button class="btn btn-sm btn-outline" onclick="pauseReview()">⏸ 暂停</button>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Flashcard -->
+    <div class="flashcard-container">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="flashcard-face">
+          <div class="word-pair">
+            <span id="word-a">—</span>
+            <span class="word-divider">vs</span>
+            <span id="word-b">—</span>
+          </div>
+          <div style="margin-top:12px;">
+            <button class="btn btn-sm btn-outline" onclick="event.stopPropagation(); speakWord(document.getElementById('word-a').textContent)" title="朗读单词A">🔊 A</button>
+            <button class="btn btn-sm btn-outline" onclick="event.stopPropagation(); speakWord(document.getElementById('word-b').textContent)" title="朗读单词B">🔊 B</button>
+          </div>
+          <div class="hint">👆 点击卡片翻转查看释义</div>
+        </div>
+        <div class="flashcard-face flashcard-back">
+          <div id="card-back-content"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rating (shown after flip) -->
+    <div id="rating-area" style="display:none; text-align:center; margin-top:20px;">
+      <p style="font-family:var(--font-title); margin-bottom:10px;">你怎么评价这次回忆？</p>
+      <div class="rating-buttons">
+        <button class="rating-btn" onclick="rateCard(0)" title="完全忘记">0</button>
+        <button class="rating-btn" onclick="rateCard(1)" title="有印象但想不起来">1</button>
+        <button class="rating-btn" onclick="rateCard(2)" title="勉强记得一部分">2</button>
+        <button class="rating-btn" onclick="rateCard(3)" title="基本记得">3</button>
+        <button class="rating-btn" onclick="rateCard(4)" title="记得很清楚">4</button>
+        <button class="rating-btn" onclick="rateCard(5)" title="完美">5</button>
+      </div>
+      <p style="font-size:0.8rem; color:var(--color-text-light); margin-top:8px;">
+        0=完全忘记 😵 → 5=滚瓜烂熟 🎉
+      </p>
+    </div>
+  </div>
+
+  <!-- Completion state -->
+  <div id="completion-state" style="display:none; text-align:center; margin:40px 0;">
+    <div style="font-size:4rem;">🎉</div>
+    <h1>太棒了！今日任务完成！</h1>
+    <p style="color:var(--color-text-light); margin:12px 0;" id="completion-msg"></p>
+    <div style="margin:20px 0;">
+      <span id="completion-stars" style="font-size:2rem;"></span>
+    </div>
+    <a href="index.html" class="btn btn-primary btn-lg">🏠 返回主页</a>
+    <a href="manage.html" class="btn btn-outline btn-lg">➕ 添加新单词</a>
+  </div>
+</div>
+
+<script src="js/wordbank.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/scheduler.js"></script>
+<script src="js/tts.js"></script>
+<script src="js/review.js"></script>
+<script src="js/pixel-pets.js"></script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📝 单词管理 — 易混词小窝</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo">🌟 易混词小窝</div>
+  <div class="nav-links">
+    <a href="index.html">🏠 主页</a>
+    <a href="review.html">🃏 复习</a>
+    <a href="manage.html" class="active">📝 词库</a>
+    <a href="search.html">🔍 搜索</a>
+  </div>
+</nav>
+
+<div class="page-container">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+    <h1 style="margin:0;">📝 单词管理</h1>
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="btn btn-sm btn-outline" onclick="document.getElementById('file-input').click()">📥 导入</button>
+      <input type="file" id="file-input" accept=".json,.csv" style="display:none" onchange="handleFileImport(event)">
+      <button class="btn btn-sm btn-outline" onclick="exportWords()">📤 导出</button>
+      <button class="btn btn-sm btn-outline" onclick="showTemplateHelp()">📋 模板</button>
+      <button class="btn btn-sm btn-primary" onclick="openAddModal()">➕ 添加单词</button>
+    </div>
+  </div>
+
+  <!-- Stats bar -->
+  <div style="display:flex; gap:16px; flex-wrap:wrap; margin:16px 0; font-size:0.9rem; color:var(--color-text-light);">
+    <span>总计：<strong id="stat-total">0</strong> 组</span>
+    <span>已掌握：<strong id="stat-mastered">0</strong></span>
+    <span>学习中：<strong id="stat-learning">0</strong></span>
+    <span>新词：<strong id="stat-new">0</strong></span>
+  </div>
+
+  <!-- Filter -->
+  <div class="filter-chips" id="filter-chips">
+    <span class="filter-chip active" data-filter="all">全部</span>
+    <span class="filter-chip" data-filter="拼写易混">拼写易混</span>
+    <span class="filter-chip" data-filter="同音易混">同音易混</span>
+    <span class="filter-chip" data-filter="用法易混">用法易混</span>
+    <span class="filter-chip" data-filter="简单">⭐ 简单</span>
+    <span class="filter-chip" data-filter="中等">⭐⭐ 中等</span>
+    <span class="filter-chip" data-filter="困难">⭐⭐⭐ 困难</span>
+  </div>
+
+  <!-- Word list -->
+  <div id="word-list" style="margin-top:16px;"></div>
+  <div id="empty-state" class="empty-state" style="display:none;">
+    <div class="empty-icon">📭</div>
+    <p>还没有单词哦~</p>
+    <p>点击「添加单词」或「导入」开始吧！</p>
+  </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" id="word-modal" style="display:none;">
+  <div class="modal">
+    <h2 id="modal-title">➕ 添加单词</h2>
+    <div id="word-form">
+      <input type="hidden" id="edit-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label>单词 A <span style="color:#C62828;">*</span></label>
+          <input type="text" id="form-wordA" placeholder="如：affect">
+        </div>
+        <div class="form-group">
+          <label>单词 B <span style="color:#C62828;">*</span></label>
+          <input type="text" id="form-wordB" placeholder="如：effect">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>释义 A（中文）</label>
+          <input type="text" id="form-meaningA" placeholder="如：影响；感动（动词）">
+        </div>
+        <div class="form-group">
+          <label>释义 B（中文）</label>
+          <input type="text" id="form-meaningB" placeholder="如：效果；影响（名词）">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>例句 A</label>
+          <input type="text" id="form-exampleA" placeholder="英文例句">
+        </div>
+        <div class="form-group">
+          <label>例句 B</label>
+          <input type="text" id="form-exampleB" placeholder="英文例句">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>易混辨析（记忆技巧）</label>
+        <textarea id="form-tip" placeholder="帮助区分这两个单词的记忆技巧"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>标签分类</label>
+          <select id="form-tags" multiple style="height:80px;">
+            <option value="拼写易混">拼写易混</option>
+            <option value="同音易混">同音易混</option>
+            <option value="用法易混">用法易混</option>
+          </select>
+          <small style="color:var(--color-text-light);">按住 Ctrl 多选</small>
+        </div>
+        <div class="form-group">
+          <label>难度</label>
+          <select id="form-difficulty">
+            <option value="简单">⭐ 简单</option>
+            <option value="中等" selected>⭐⭐ 中等</option>
+            <option value="困难">⭐⭐⭐ 困难</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:16px;">
+        <button type="button" class="btn btn-outline" onclick="closeModal()">取消</button>
+        <button type="button" class="btn btn-primary" onclick="saveWord()">💾 保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Import result modal -->
+<div class="modal-overlay" id="import-modal" style="display:none;">
+  <div class="modal" style="text-align:center;">
+    <div id="import-icon" style="font-size:3rem; margin-bottom:12px;"></div>
+    <p id="import-message" style="margin-bottom:16px;"></p>
+    <button class="btn btn-primary" onclick="closeImportModal()">确定</button>
+  </div>
+</div>
+
+<!-- Template help modal -->
+<div class="modal-overlay" id="template-modal" style="display:none;">
+  <div class="modal">
+    <h2>📋 导入模板说明</h2>
+    <p style="margin:8px 0; color:var(--color-text-light);">导入文件支持 <strong>CSV</strong> 和 <strong>JSON</strong> 两种格式。下载模板后，按格式填入你的单词即可导入。</p>
+
+    <h3 style="margin-top:16px;">📊 CSV 格式（推荐，可用 Excel/WPS 编辑）</h3>
+    <p style="font-size:0.85rem; color:var(--color-text-light); margin:6px 0;">
+      用 Excel 或 WPS 打开模板，每一行填一组易混词，保存为 .csv 文件后导入。
+    </p>
+    <p style="font-size:0.85rem; color:var(--color-text-light);">
+      列名：<code>单词A, 单词B, 释义A, 释义B, 例句A, 例句B, 辨析, 标签, 难度</code>
+    </p>
+    <button class="btn btn-sm btn-primary" onclick="downloadCSVTemplate()" style="margin:8px 0;">⬇ 下载 CSV 模板</button>
+
+    <h3 style="margin-top:16px;">📝 JSON 格式</h3>
+    <p style="font-size:0.85rem; color:var(--color-text-light); margin:6px 0;">
+      适合有编程经验的用户，用文本编辑器编辑。
+    </p>
+    <button class="btn btn-sm btn-outline" onclick="downloadJSONTemplate()" style="margin:8px 0;">⬇ 下载 JSON 模板</button>
+
+    <h3 style="margin-top:16px;">💡 字段说明</h3>
+    <table style="font-size:0.85rem; width:100%; border-collapse:collapse;">
+      <tr><td style="padding:4px 8px;"><strong>单词A / 单词B</strong></td><td style="padding:4px 8px;">必填，两个易混的英语单词</td></tr>
+      <tr><td style="padding:4px 8px;"><strong>释义A / 释义B</strong></td><td style="padding:4px 8px;">中文解释（选填）</td></tr>
+      <tr><td style="padding:4px 8px;"><strong>例句A / 例句B</strong></td><td style="padding:4px 8px;">英文例句（选填）</td></tr>
+      <tr><td style="padding:4px 8px;"><strong>辨析</strong></td><td style="padding:4px 8px;">两个词的区分技巧（选填）</td></tr>
+      <tr><td style="padding:4px 8px;"><strong>标签</strong></td><td style="padding:4px 8px;">可选：拼写易混、同音易混、用法易混</td></tr>
+      <tr><td style="padding:4px 8px;"><strong>难度</strong></td><td style="padding:4px 8px;">可选：简单、中等、困难</td></tr>
+    </table>
+
+    <div style="text-align:right; margin-top:16px;">
+      <button class="btn btn-outline" onclick="closeTemplateModal()">关闭</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/wordbank.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/scheduler.js"></script>
+<script src="js/tts.js"></script>
+<script src="js/import.js"></script>
+<script src="js/manage.js"></script>
+<script src="js/pixel-pets.js"></script>
+</body>
+</html>

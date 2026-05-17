@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔍 搜索单词 — 易混词小窝</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo">🌟 易混词小窝</div>
+  <div class="nav-links">
+    <a href="index.html">🏠 主页</a>
+    <a href="review.html">🃏 复习</a>
+    <a href="manage.html">📝 词库</a>
+    <a href="search.html" class="active">🔍 搜索</a>
+  </div>
+</nav>
+
+<div class="page-container">
+  <h1>🔍 搜索单词</h1>
+
+  <!-- Search bar -->
+  <div class="search-bar">
+    <input type="text" id="search-input" placeholder="搜索单词、释义、辨析内容..." oninput="doSearch()">
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-chips" id="tag-filters">
+    <span class="filter-chip active" data-tag="all">全部标签</span>
+    <span class="filter-chip" data-tag="拼写易混">拼写易混</span>
+    <span class="filter-chip" data-tag="同音易混">同音易混</span>
+    <span class="filter-chip" data-tag="用法易混">用法易混</span>
+  </div>
+  <div class="filter-chips" id="difficulty-filters" style="margin-top:4px;">
+    <span class="filter-chip active" data-difficulty="all">全部难度</span>
+    <span class="filter-chip" data-difficulty="简单">⭐ 简单</span>
+    <span class="filter-chip" data-difficulty="中等">⭐⭐ 中等</span>
+    <span class="filter-chip" data-difficulty="困难">⭐⭐⭐ 困难</span>
+  </div>
+  <div class="filter-chips" id="status-filters" style="margin-top:4px;">
+    <span class="filter-chip active" data-status="all">全部状态</span>
+    <span class="filter-chip" data-status="mastered">⭐ 已掌握</span>
+    <span class="filter-chip" data-status="learning">📖 学习中</span>
+    <span class="filter-chip" data-status="new">🆕 未开始</span>
+  </div>
+
+  <!-- Results -->
+  <div style="margin:16px 0; font-size:0.9rem; color:var(--color-text-light);">
+    找到 <strong id="result-count">0</strong> 组单词
+  </div>
+  <div id="search-results"></div>
+  <div id="search-empty" class="empty-state" style="display:none;">
+    <div class="empty-icon">🔍</div>
+    <p>没有找到匹配的单词</p>
+    <p>试试其他关键词或筛选条件吧~</p>
+  </div>
+</div>
+
+<!-- Word detail modal -->
+<div class="modal-overlay" id="detail-modal" style="display:none;">
+  <div class="modal" id="detail-content"></div>
+</div>
+
+<script src="js/wordbank.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/scheduler.js"></script>
+<script src="js/tts.js"></script>
+<script src="js/dictionary.js"></script>
+<script src="js/search.js"></script>
+<script src="js/pixel-pets.js"></script>
+</body>
+</html>

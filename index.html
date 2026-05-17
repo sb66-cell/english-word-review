@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📝 易混词小窝 — 主页</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo">🌟 易混词小窝</div>
+  <div class="nav-links">
+    <a href="index.html" class="active">🏠 主页</a>
+    <a href="review.html">🃏 复习</a>
+    <a href="manage.html">📝 词库</a>
+    <a href="search.html">🔍 搜索</a>
+  </div>
+</nav>
+
+<div class="page-container">
+  <!-- Greeting -->
+  <div style="text-align:center; margin: 20px 0 8px;">
+    <h1 id="greeting" style="margin:0;">👋 准备好开始了吗？</h1>
+    <p id="greeting-sub" style="color:var(--color-text-light); margin-top:8px; font-size:1rem;"></p>
+  </div>
+
+  <!-- Daily Vocab — top position -->
+  <div class="daily-vocab-card" id="daily-vocab">
+    <div class="vocab-label" id="vocab-label">📖 今日考研词汇</div>
+    <div class="vocab-word" id="vocab-word"></div>
+    <div class="vocab-meaning" id="vocab-meaning"></div>
+    <div style="margin-top:8px; font-style:italic; color:var(--color-text-light); font-size:1.1rem;" id="vocab-example"></div>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value" id="due-count">0</div>
+      <div class="stat-label">📋 今日待复习</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="streak-count">0</div>
+      <div class="stat-label">🔥 连续打卡</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="total-words">0</div>
+      <div class="stat-label">📚 词对总数</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="mastery-rate">0%</div>
+      <div class="stat-label">⭐ 掌握率</div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin: 20px 0;">
+    <a href="review.html" class="btn btn-primary btn-lg" id="btn-start-review">🃏 开始复习</a>
+    <a href="manage.html" class="btn btn-outline btn-lg">➕ 添加单词</a>
+    <a href="search.html" class="btn btn-outline btn-lg">🔍 搜索单词</a>
+  </div>
+
+  <!-- Checkin Calendar -->
+  <div class="card" style="margin: 24px 0;">
+    <h2 class="section-title">📅 本月打卡</h2>
+    <div class="calendar-grid" id="calendar"></div>
+    <div style="text-align:center; margin-top:14px;">
+      <span id="today-checkin-status" style="font-size:1rem; color:var(--color-text-light);"></span>
+    </div>
+  </div>
+
+  <!-- English Motivational Quote — bottom position -->
+  <div class="daily-vocab-card" id="daily-quote-card" style="background: linear-gradient(135deg, #F1F8E9 0%, #E8F0FD 50%, #FFF8E1 100%);">
+    <div class="vocab-label" style="color:var(--color-blue);">💬 Today's Inspiration</div>
+    <div class="vocab-word" id="quote-text" style="font-size:1.2rem;"></div>
+    <div class="vocab-meaning" id="quote-author" style="font-size:1rem;"></div>
+  </div>
+</div>
+
+<script src="js/wordbank.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/scheduler.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/pixel-pets.js"></script>
+</body>
+</html>
